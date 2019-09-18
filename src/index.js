@@ -19,17 +19,20 @@ class Board extends React.Component {
             squares: Array(400).fill(null),
             xIsNext: true,
             status: 'Next player: X',
+            isWin : false
         };
     }
 
     handleClick(i) {
-        const squares = this.state.squares.slice();
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({ squares: squares });
-        this.setState({
-            squares: squares,
-            xIsNext: !this.state.xIsNext,
-        });
+        if (!this.state.squares[i] && !this.state.isWin) {
+            const squares = this.state.squares.slice();
+            squares[i] = this.state.xIsNext ? 'X' : 'O';
+            this.setState({ squares: squares });
+            this.setState({
+                squares: squares,
+                xIsNext: !this.state.xIsNext,
+            });
+        }
     }
 
     handleChange2 = (evt) => {
@@ -38,6 +41,7 @@ class Board extends React.Component {
             squares: squares,
             xIsNext: true,
             status: 'Next player: ' + 'X',
+            isWin : false,
         })
     }
 
@@ -55,6 +59,7 @@ class Board extends React.Component {
         const winner = calculateWinner(this.state.squares);
         if (winner) {
             this.state.status = 'Winner: ' + winner;
+            this.state.isWin = true;
         } else {
             this.state.status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
@@ -157,7 +162,7 @@ function calculateWinner(squares) {
             if (b - a === 1) {
                 var count = 0;
                 var rowA = Math.floor(a / 20);
-                var colA = a  % 20;
+                var colA = a % 20;
                 var rowE = Math.floor(e / 20);
                 var colE = e % 20;
 
@@ -219,7 +224,7 @@ function calculateWinner(squares) {
                         break;
                     }
                 }
-                for(var id = rowE + 1; id < 20; id++) {
+                for (var id = rowE + 1; id < 20; id++) {
                     if (squares[start + 21] && squares[start + 21] != squares[e]) {
                         count = count + 1;
                         break;
@@ -247,14 +252,14 @@ function calculateWinner(squares) {
                         break;
                     }
                     start = start - 19;
-                }       
-                
+                }
+
                 var rowEnd = 19;
                 if (colE < (19 - rowE)) {
                     rowEnd = rowE + colE;
                 }
                 var end = rowE * 20 + colE + 19;
-                for (var j = rowE + 1; j <= rowEnd; j++ ) {
+                for (var j = rowE + 1; j <= rowEnd; j++) {
                     if (squares[end] && squares[end] != squares[e]) {
                         count = count + 1;
                         break;
